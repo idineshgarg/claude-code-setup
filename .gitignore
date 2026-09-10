@@ -1,0 +1,5 @@
+# Workflow artifacts — uncomment to keep specs/PRDs out of version control.
+# Committing them per-ticket alongside code is also a valid choice.
+# .workflow/
+
+.DS_Store
