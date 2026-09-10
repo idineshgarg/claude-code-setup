@@ -15,6 +15,8 @@ A ticket-to-implementation dev workflow for Claude Code.
 Or just tell Claude "run the dev workflow for PROJ-123" and the `dev-workflow` skill
 drives all five stages, pausing for review after the spec, the PRD, and the review.
 
+See [`examples/API-231/`](examples/) for a full worked run of all five stages.
+
 ## Layout
 
 ```
