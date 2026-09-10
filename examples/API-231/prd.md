@@ -1,6 +1,6 @@
 # PRD: API-231 — Rate-limit the public search endpoint
 
-- **Ticket:** https://example.atlassian.net/browse/API-231
+- **Ticket:** <https://example.atlassian.net/browse/API-231>
 - **Spec:** ./spec.md
 - **Status:** reviewed <!-- draft | approved | implemented | reviewed -->
 - **Last updated:** 2026-09-10

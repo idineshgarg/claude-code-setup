@@ -5,7 +5,7 @@
 - **Assignee:** Dinesh Garg
 - **Priority:** High
 - **Sprint:** 2026-09 S2
-- **Link:** https://example.atlassian.net/browse/API-231
+- **Link:** <https://example.atlassian.net/browse/API-231>
 
 ## Description
 

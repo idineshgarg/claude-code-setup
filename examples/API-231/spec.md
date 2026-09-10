@@ -1,6 +1,6 @@
 # Spec: API-231 — Rate-limit the public search endpoint
 
-- **Ticket:** https://example.atlassian.net/browse/API-231
+- **Ticket:** <https://example.atlassian.net/browse/API-231>
 - **Author:** Dinesh Garg
 - **Status:** draft
 - **Last updated:** 2026-09-10
