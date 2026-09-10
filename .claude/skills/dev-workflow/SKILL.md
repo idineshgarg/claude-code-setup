@@ -16,6 +16,13 @@ Each stage is also runnable on its own as a slash command.
 | 4 | Implement the PRD | `/implement <KEY>` | code changes + `.workflow/<KEY>/progress.md` |
 | 5 | Re-review the PRD | `/review-prd <KEY>` | `.workflow/<KEY>/review.md` |
 
+Two ship commands run after the pipeline (or standalone, on any change):
+
+| Command | Purpose |
+|---------|---------|
+| `/commit` | Stage and group changes into well-formed commits on a feature branch. |
+| `/pr` | Push and open a PR, filling the body from the PRD, `progress.md`, and `review.md`. |
+
 ## Conventions
 
 - **Working directory:** everything the workflow generates lives under `.workflow/<TICKET-KEY>/`.
@@ -36,8 +43,10 @@ When the user asks to run the full workflow for a ticket:
 3. Run stage 3, then show the PRD scope + non-goals and wait for a go-ahead.
 4. Run stage 4.
 5. Run stage 5 and report the verdict.
+6. On the user's go-ahead, run `/commit` then `/pr`.
 
 ## Templates
 
 - `templates/spec.md` — technical spec skeleton
 - `templates/prd.md` — PRD skeleton
+- `templates/pull_request.md` — PR body skeleton (`/pr` prefers `.github/pull_request_template.md` when present)
