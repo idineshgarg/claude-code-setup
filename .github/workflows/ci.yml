@@ -1,0 +1,80 @@
+name: CI
+
+# PRs get the full validation gate; pushes to main additionally run the
+# post-merge summary job so a merge produces a visible, auditable record.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint Markdown
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: |
+            **/*.md
+            #.github/**
+
+  validate-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate command frontmatter, skill wiring, and worked example
+        run: python3 scripts/validate_workflow.py --github --summary "$GITHUB_STEP_SUMMARY"
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: ShellCheck any scripts
+        run: |
+          shopt -s nullglob
+          files=(scripts/*.sh)
+          if [ ${#files[@]} -eq 0 ]; then echo "no shell scripts"; exit 0; fi
+          sudo apt-get update && sudo apt-get install -y shellcheck
+          shellcheck "${files[@]}"
+
+  # Runs only after a merge (push to main), once the gates above are green.
+  post-merge:
+    needs: [markdown-lint, validate-workflow, shellcheck]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Record what merged
+        run: |
+          {
+            echo "## Merged to \`main\`"
+            echo
+            echo "**Commit:** \`${GITHUB_SHA::12}\` by \`${GITHUB_ACTOR}\`"
+            echo
+            echo "### Files changed"
+            git diff --stat HEAD^ HEAD | sed 's/^/    /'
+            echo
+            echo "### Commit message"
+            git log -1 --pretty=format:'%s%n%n%b' | sed 's/^/    /'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Emit a structured deploy log line
+        run: |
+          echo "::notice title=Merged::${GITHUB_SHA::12} on main — validation passed, ready to release"
+          # A real pipeline would trigger a deploy here (e.g. gh workflow run deploy.yml,
+          # or a call to the platform's release API). Kept as a log line on purpose.
+          printf '{"event":"merge","sha":"%s","ref":"%s","actor":"%s","status":"validated"}\n' \
+            "$GITHUB_SHA" "$GITHUB_REF_NAME" "$GITHUB_ACTOR"

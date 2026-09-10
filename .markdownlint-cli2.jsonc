@@ -1,0 +1,13 @@
+{
+  // Docs and templates, not prose to nitpick. Keep the checks that catch real
+  // breakage (bad links, broken lists) and drop the stylistic ones.
+  "config": {
+    "MD013": false, // line length
+    "MD024": { "siblings_only": true }, // repeated headings ok across sections
+    "MD033": false, // inline HTML (templates use <!-- --> guidance comments)
+    "MD041": false, // first line need not be a heading (templates lead with a comment)
+    "MD046": false  // code block style
+  },
+  "globs": ["**/*.md"],
+  "ignores": ["node_modules", ".workflow"]
+}

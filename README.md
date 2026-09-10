@@ -1,5 +1,7 @@
 # claude-code-setup
 
+[![CI](https://github.com/idineshgarg/claude-code-setup/actions/workflows/ci.yml/badge.svg)](https://github.com/idineshgarg/claude-code-setup/actions/workflows/ci.yml)
+
 A ticket-to-implementation dev workflow for Claude Code.
 
 ## The workflow
@@ -55,6 +57,19 @@ See [`examples/API-231/`](examples/) for a full worked run of all five stages.
 Commands and skills are picked up automatically.
 
 **Global:** copy `commands/` and `skills/` into `~/.claude/` to use them everywhere.
+
+## CI
+
+`.github/workflows/ci.yml` runs on every PR and on merge to `main`:
+
+| Job | What it checks |
+|-----|----------------|
+| `markdown-lint` | Markdown is well-formed (`markdownlint-cli2`, config in `.markdownlint-cli2.jsonc`). |
+| `validate-workflow` | `scripts/validate_workflow.py` — every command has valid frontmatter with a description, the skill references every command, templates named by the skill exist, and the worked example has all six stage files with its acceptance criteria checked off. Failures show as inline PR annotations and a job summary. |
+| `shellcheck` | Any `scripts/*.sh` pass ShellCheck. |
+| `post-merge` | Runs only on push to `main`, after the gates pass. Writes a job summary (commit, files changed, message) and emits a structured log line — the seam where a real pipeline would trigger a deploy. |
+
+Run the validator locally: `python3 scripts/validate_workflow.py`
 
 ## Notes
 
